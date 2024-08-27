@@ -1,0 +1,26 @@
+
+colorscheme gruvbox
+set termguicolors
+set nu rnu
+set expandtab autoindent smartindent
+set incsearch hlsearch
+set clipboard+=unnamedplus
+
+let mapleader= " "
+let g:do_filetype_lua = 1
+
+nnoremap <SPACE> <Nop>
+
+
+nmap <leader>nt :NvimTreeToggle<CR>
+nmap <leader>nf :NvimTreeFindFile<CR>
+nmap <leader>nr :NvimTreeRefresh<CR>
+
+nmap <leader>l :BufferLineCycleNext<CR>
+nmap <leader>h :BufferLineCyclePrev<CR>
+nmap <leader>e :BufferLinePick<CR>
+nmap <leader>d :BufferLinePickClose<CR>
+
+nmap <C-p> :Telescope find_files<CR>
+nmap <C-o> :Telescope buffers<CR>
+nmap <C-i> :Lspsaga outline<CR>

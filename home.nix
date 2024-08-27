@@ -1,5 +1,6 @@
 { config, pkgs, ... }:
 
+with builtins;
 {
   home.username = "loc.nguyen";
   home.homeDirectory = "/Users/loc.nguyen";
@@ -135,29 +136,19 @@
     enable = true;
     withPython3 = true;
     withNodeJs = true;
-    extraConfig = ''
-      colorscheme gruvbox
-      set termguicolors
-      set nu rnu
-      set expandtab autoindent smartindent
-      set incsearch hlsearch
-    '';
-    extraLuaConfig = ''
-      require("bufferline").setup()
-      require("nvim-tree").setup()
-      require("lualine").setup()
-    '';
+    extraConfig = builtins.readFile nvim/vimrc;
+    extraLuaConfig = builtins.readFile nvim/config.lua;
     plugins = with pkgs.vimPlugins; [
       telescope-nvim
-      nvim-treesitter
       lspsaga-nvim
       gruvbox
-      LeaderF
       lualine-nvim
       nvim-web-devicons
       nvim-tree-lua
       bufferline-nvim
       nvim-lspconfig
+      indent-blankline-nvim
+      nvim-treesitter.withAllGrammars
     ];
   };
   programs.zoxide = {
