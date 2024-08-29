@@ -1,6 +1,7 @@
 { config, pkgs, ... }:
 
 with builtins;
+
 {
   home.username = "loc.nguyen";
   home.homeDirectory = "/Users/loc.nguyen";
@@ -139,16 +140,19 @@ with builtins;
     extraConfig = builtins.readFile nvim/vimrc;
     extraLuaConfig = builtins.readFile nvim/config.lua;
     plugins = with pkgs.vimPlugins; [
-      telescope-nvim
-      lspsaga-nvim
-      gruvbox
-      lualine-nvim
-      nvim-web-devicons
-      nvim-tree-lua
       bufferline-nvim
-      nvim-lspconfig
+      cmp-nvim-lua
+      cmp-nvim-lsp
+      gruvbox
       indent-blankline-nvim
+      lspsaga-nvim
+      lualine-nvim
+      nvim-cmp
+      nvim-lspconfig
+      nvim-tree-lua
       nvim-treesitter.withAllGrammars
+      nvim-web-devicons
+      telescope-nvim
     ];
   };
   programs.zoxide = {
