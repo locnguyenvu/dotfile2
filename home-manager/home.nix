@@ -3,21 +3,22 @@
 with builtins;
 
 {
-  home.username = "loc.nguyen";
-  home.homeDirectory = "/Users/loc.nguyen";
+  home.username = "loc";
+  home.homeDirectory = "/home/loc";
 
   home.stateVersion = "24.05"; # Please read the comment before changing.
   home.enableNixpkgsReleaseCheck = false;
 
   home.packages = [
-    pkgs.yq-go
-    pkgs.ripgrep
-    pkgs.fd
-    pkgs.zoxide
-    pkgs.eza
-    pkgs.inconsolata-nerdfont
     pkgs._7zz
+    pkgs.eza
+    pkgs.fd
     pkgs.httpie
+    pkgs.inconsolata-nerdfont
+    pkgs.ripgrep
+    pkgs.yq-go
+    pkgs.zoxide
+    pkgs.zsh
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -66,7 +67,7 @@ with builtins;
         "python"
       ];
       prompt = {
-        theme = "pure";
+        theme = "pws";
       };
     };
   };
@@ -161,7 +162,7 @@ with builtins;
   };
   programs.git = {
     enable = true;
-    userEmail = "loc.nguyen@paradox.ai";
-    userName = "Loc Nguyen Vu";
+    userEmail = "ngynvuloc@gmail.com";
+    userName = "locnguyenvu";
   };
 }
