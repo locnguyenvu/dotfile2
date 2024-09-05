@@ -3,21 +3,22 @@
 with builtins;
 
 {
-  home.username = "loc.nguyen";
-  home.homeDirectory = "/Users/loc.nguyen";
+  home.username = "#username";
+  home.homeDirectory = "#homedir";
 
   home.stateVersion = "24.05"; # Please read the comment before changing.
   home.enableNixpkgsReleaseCheck = false;
 
   home.packages = [
-    pkgs.yq-go
-    pkgs.ripgrep
-    pkgs.fd
-    pkgs.zoxide
-    pkgs.eza
-    pkgs.inconsolata-nerdfont
     pkgs._7zz
+    pkgs.eza
+    pkgs.fd
     pkgs.httpie
+    pkgs.inconsolata-nerdfont
+    pkgs.pueue
+    pkgs.ripgrep
+    pkgs.yq-go
+    pkgs.zoxide
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -66,7 +67,7 @@ with builtins;
         "python"
       ];
       prompt = {
-        theme = "pure";
+        theme = "nicoulaj";
       };
     };
   };
@@ -138,21 +139,24 @@ with builtins;
     withPython3 = true;
     withNodeJs = true;
     extraConfig = builtins.readFile nvim/vimrc;
-    extraLuaConfig = builtins.readFile nvim/config.lua;
+    extraLuaConfig = builtins.readFile nvim/init.lua;
     plugins = with pkgs.vimPlugins; [
       bufferline-nvim
-      cmp-nvim-lua
       cmp-nvim-lsp
+      cmp-nvim-lua
+      flash-nvim
       gruvbox
       indent-blankline-nvim
       lspsaga-nvim
       lualine-nvim
       nvim-cmp
+      nvim-cursorline
       nvim-lspconfig
       nvim-tree-lua
       nvim-treesitter.withAllGrammars
       nvim-web-devicons
       telescope-nvim
+      vim-repeat
     ];
   };
   programs.zoxide = {
@@ -161,7 +165,7 @@ with builtins;
   };
   programs.git = {
     enable = true;
-    userEmail = "loc.nguyen@paradox.ai";
-    userName = "Loc Nguyen Vu";
+    userEmail = "#gitemail";
+    userName = "#gitusername";
   };
 }
