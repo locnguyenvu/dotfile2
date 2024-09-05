@@ -10,14 +10,15 @@ with builtins;
   home.enableNixpkgsReleaseCheck = false;
 
   home.packages = [
-    pkgs.yq-go
-    pkgs.ripgrep
-    pkgs.fd
-    pkgs.zoxide
-    pkgs.eza
-    pkgs.inconsolata-nerdfont
     pkgs._7zz
+    pkgs.eza
+    pkgs.fd
     pkgs.httpie
+    pkgs.inconsolata-nerdfont
+    pkgs.pueue
+    pkgs.ripgrep
+    pkgs.yq-go
+    pkgs.zoxide
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -66,7 +67,7 @@ with builtins;
         "python"
       ];
       prompt = {
-        theme = "pure";
+        theme = "nicoulaj";
       };
     };
   };
@@ -141,18 +142,21 @@ with builtins;
     extraLuaConfig = builtins.readFile nvim/config.lua;
     plugins = with pkgs.vimPlugins; [
       bufferline-nvim
-      cmp-nvim-lua
       cmp-nvim-lsp
+      cmp-nvim-lua
+      flash-nvim
       gruvbox
       indent-blankline-nvim
       lspsaga-nvim
       lualine-nvim
       nvim-cmp
+      nvim-cursorline
       nvim-lspconfig
       nvim-tree-lua
       nvim-treesitter.withAllGrammars
       nvim-web-devicons
       telescope-nvim
+      vim-repeat
     ];
   };
   programs.zoxide = {

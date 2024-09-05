@@ -1,5 +1,18 @@
 require("lualine").setup {}
 
+require('nvim-cursorline').setup {
+  cursorline = {
+    enable = true,
+    timeout = 1000,
+    number = false,
+  },
+  cursorword = {
+    enable = true,
+    min_length = 3,
+    hl = { underline = true },
+  }
+}
+
 require("bufferline").setup {
   options = {
     indicator = {
@@ -67,6 +80,16 @@ require'nvim-treesitter.configs'.setup {
   textobjects = { enable = true },
 }
 
+-- Flash.nvim
+vim.keymap.set({ 'n', 'x', 'o' }, 's', function() require('flash').jump() end)
+vim.keymap.set({ 'n', 'x', 'o' }, 'S', function() require('flash').treesitter() end)
+vim.keymap.set({'o'}, 'r', function() require('flash').remote() end)
+vim.keymap.set({ 'o', 'x' }, 'R', function() require('flash').treesitter_search() end)
+vim.keymap.set({ 'c' }, '<c-s>', function() require('flash').toggle() end)
+
+
+
+
 -- Language server
 require('lspsaga').setup({
   lightbulb = {
@@ -111,7 +134,7 @@ local on_attach = function(client, bufnr)
   local bufopts = { noremap=true, silent=true, buffer=bufnr }
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+  vim.keymap.set('n', 'K', '<cmd>Lspsaga peek_definition<CR>', bufopts)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
   vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
   vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
@@ -122,7 +145,8 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
   vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
   vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+  -- vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+  vim.keymap.set('n', 'gr', '<cmd>Lspsaga finder<CR>', bufopts)
 end
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
