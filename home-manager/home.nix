@@ -3,8 +3,8 @@
 with builtins;
 
 {
-  home.username = "loc.nguyen";
-  home.homeDirectory = "/Users/loc.nguyen";
+  home.username = "#username";
+  home.homeDirectory = "#homedir";
 
   home.stateVersion = "24.05"; # Please read the comment before changing.
   home.enableNixpkgsReleaseCheck = false;
@@ -139,7 +139,7 @@ with builtins;
     withPython3 = true;
     withNodeJs = true;
     extraConfig = builtins.readFile nvim/vimrc;
-    extraLuaConfig = builtins.readFile nvim/config.lua;
+    extraLuaConfig = builtins.readFile nvim/init.lua;
     plugins = with pkgs.vimPlugins; [
       bufferline-nvim
       cmp-nvim-lsp
@@ -165,7 +165,7 @@ with builtins;
   };
   programs.git = {
     enable = true;
-    userEmail = "loc.nguyen@paradox.ai";
-    userName = "Loc Nguyen Vu";
+    userEmail = "#gitemail";
+    userName = "#gitusername";
   };
 }
