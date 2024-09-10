@@ -167,13 +167,18 @@ with builtins;
   };
   programs.git = {
     enable = true;
-    userEmail = "#gitemail";
-    userName = "#gitusername";
     delta = {
       enable = true;
       options = {
         features = "decorations side-by-side line-number";
       };
     };
+  };
+  programs.eza = {
+      enable = true;
+      enableZshIntegration = true;
+  };
+  programs.jujutsu = {
+      enable = true;
   };
 }
