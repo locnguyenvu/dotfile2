@@ -11,6 +11,7 @@ with builtins;
 
   home.packages = [
     pkgs._7zz
+    pkgs.delta
     pkgs.eza
     pkgs.fd
     pkgs.httpie
@@ -28,6 +29,7 @@ with builtins;
 
   home.sessionVariables = {
     EDITOR = "nvim";
+    GIT_PAGER = "delta";
   };
 
   # Let Home Manager install and manage itself.
@@ -167,5 +169,11 @@ with builtins;
     enable = true;
     userEmail = "#gitemail";
     userName = "#gitusername";
+    delta = {
+      enable = true;
+      options = {
+        features = "decorations side-by-side line-number";
+      };
+    };
   };
 }
