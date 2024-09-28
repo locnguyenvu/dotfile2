@@ -1,26 +1,32 @@
 with import <nixpkgs> { };
 
-let
-  pythonPackages = python312Packages;
-in pkgs.mkShell rec {
-  name = "python-3.12";
+pkgs.mkShellNoCC rec {
+  name = "py312";
   venvDir = "./.venv";
   buildInputs = [
     # A Python interpreter including the 'venv' module is required to bootstrap
     # the environment.
-    pythonPackages.python
+    python312Packages.python
 
     # This executes some shell code to initialize a venv in $venvDir before
     # dropping into the shell
-    pythonPackages.venvShellHook
+    python312Packages.venvShellHook
 
     # Those are dependencies that we would like to use from nixpkgs, which will
     # add them to PYTHONPATH and thus make them accessible from within the venv.
-    pythonPackages.rich
-    pythonPackages.python-lsp-server
-    pythonPackages.yapf
-    pythonPackages.isort
-    pythonPackages.pynvim
+    python312Packages.rich
+    python312Packages.python-lsp-server
+    python312Packages.python-lsp-ruff
+    python312Packages.pylsp-rope
+    python312Packages.yapf
+    python312Packages.isort
+    python312Packages.pynvim
+    python312Packages.icecream
+  ];
+  packages = with pkgs; [
+    uv
+    poetry
+    meson
   ];
 }
 
