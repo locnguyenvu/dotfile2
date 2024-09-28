@@ -11,11 +11,18 @@ with builtins;
 
   home.packages = [
     pkgs._7zz
+    pkgs.ast-grep
     pkgs.delta
     pkgs.eza
     pkgs.fd
+    pkgs.fx
     pkgs.httpie
     pkgs.inconsolata-nerdfont
+    pkgs.mycli
+    pkgs.nushell
+    pkgs.pgcli
+    pkgs.podman-compose
+    pkgs.procs
     pkgs.pueue
     pkgs.ripgrep
     pkgs.yq-go
@@ -66,7 +73,6 @@ with builtins;
         "prompt"
         "git"
         "tmux"
-        "python"
       ];
       prompt = {
         theme = "nicoulaj";
@@ -153,11 +159,13 @@ with builtins;
       lualine-nvim
       nvim-cmp
       nvim-cursorline
+      nvim-navbuddy
       nvim-lspconfig
       nvim-tree-lua
       nvim-treesitter.withAllGrammars
       nvim-web-devicons
       telescope-nvim
+      vim-fugitive
       vim-repeat
     ];
   };
@@ -173,6 +181,13 @@ with builtins;
         features = "decorations side-by-side line-number";
       };
     };
+    ignores = [
+      ".env*"
+      ".rgignore"
+      ".venv"
+      "_"
+      "local*.nix"
+    ];
   };
   programs.eza = {
       enable = true;

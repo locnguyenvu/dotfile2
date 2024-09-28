@@ -1,4 +1,13 @@
-require("lualine").setup {}
+require('lualine').setup {
+  sections = {
+    lualine_b = {'diff', 'diagnostics'},
+    lualine_c = {{'filename', path = 1}}
+  },
+  inactive_sections = {
+    lualine_b = {'diff', 'diagnostics'},
+    lualine_c = {{'filename', path = 1}}
+  }
+}
 
 require('nvim-cursorline').setup {
   cursorline = {
@@ -13,21 +22,8 @@ require('nvim-cursorline').setup {
   }
 }
 
-require("bufferline").setup {
-  options = {
-    indicator = {
-      icon = '▎'
-    },
-    modified_icon = '●',
-    left_trunc_marker = '',
-    right_trunc_marker = '',
-    diagnostics = 'nvim_lsp',
-    show_close_icon = false,
-    show_buffer_close_icons = false,
-    offsets = {{filetype = "NvimTree", text = "File Explorer"}},
-    middle_mouse_command = "bdelete! %d",
-  }
-}
+vim.opt.termguicolors = true
+require("bufferline").setup {}
 
 require("nvim-tree").setup {
   auto_reload_on_write = false,
@@ -88,14 +84,16 @@ vim.keymap.set({ 'o', 'x' }, 'R', function() require('flash').treesitter_search(
 vim.keymap.set({ 'c' }, '<c-s>', function() require('flash').toggle() end)
 
 
-
-
 -- Language server
 require('lspsaga').setup({
   lightbulb = {
     enable = false
+  },
+  breadcrumbs = {
+    enable = false
   }
 })
+vim.keymap.set({'n','t'}, '<F12>', '<cmd>Lspsaga term_toggle<CR>')
 
 local cmp = require'cmp'
 cmp.setup {
@@ -126,7 +124,15 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
 vim.keymap.set('n', '<space>w', vim.diagnostic.open_float, opts)
 vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
+local navbuddy = require('nvim-navbuddy')
+navbuddy.setup{
+  lsp = {
+    auto_attach = true,
+    preference = {'pylsp'}
+  }
+}
 local on_attach = function(client, bufnr)
+  -- navbuddy.attach(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
@@ -150,7 +156,7 @@ local on_attach = function(client, bufnr)
 end
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
--- Python LSP server
+-- NVIM LSP config
 if vim.fn.executable('pylsp') == 1 then
   require'lspconfig'.pylsp.setup {
     capabilities = capabilities,
@@ -162,12 +168,22 @@ if vim.fn.executable('pylsp') == 1 then
             ignore = {'W391'},
             maxLineLength = 150
           },
-          ruff = {
-            enabled = true,
-            extendSelect = { "I" },
-          }
         }
       }
     }
   }
 end
+
+if vim.fn.executable('ruff') == 1 then
+  require'lspconfig'.ruff.setup {
+    capabilities = capabilities,
+    on_attach = on_attach,
+    init_options = {
+      settings = {
+        -- Server settings should go here
+        builtins = {"ic", "snoop", "pp"}
+      }
+  }
+  }
+end
+
