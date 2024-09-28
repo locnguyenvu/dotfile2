@@ -29,7 +29,14 @@ require("nvim-tree").setup {
   auto_reload_on_write = false,
   view = {
     relativenumber = true, 
-    width = 40,
+    width = 50,
+    float = {
+      enable = true,
+      quit_on_focus_loss = true,
+      open_win_config = {
+        width = 50
+      }
+    }
   },
   filters = {
     custom = { '__pycache__', '*.egg-info', 'node_modules', '.venv' },

@@ -1,7 +1,12 @@
 { config, pkgs, ... }:
-
+let
+  exVimPlugin = { user, repo, rev ? "main" }: pkgs.vimUtils.buildVimPlugin {
+    pname = "${repo}";
+    version = rev;
+    src = builtins.fetchGit { url = "https://github.com/${user}/${repo}.git"; ref = rev; };
+  };
+in
 with builtins;
-
 {
   home.username = "#username";
   home.homeDirectory = "#homedir";
@@ -18,10 +23,6 @@ with builtins;
     pkgs.fx
     pkgs.httpie
     pkgs.inconsolata-nerdfont
-    pkgs.mycli
-    pkgs.nushell
-    pkgs.pgcli
-    pkgs.podman-compose
     pkgs.procs
     pkgs.pueue
     pkgs.ripgrep
@@ -167,6 +168,7 @@ with builtins;
       telescope-nvim
       vim-fugitive
       vim-repeat
+      (exVimPlugin { user = "smithbm2316"; repo = "centerpad.nvim"; })
     ];
   };
   programs.zoxide = {

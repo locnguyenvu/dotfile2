@@ -1,4 +1,3 @@
-
 colorscheme gruvbox
 set termguicolors
 set nu rnu
@@ -24,11 +23,10 @@ nmap <leader>d :BufferLinePickClose<CR>
 nmap <C-p> :Telescope find_files<CR>
 nmap <C-s> :Telescope live_grep<CR>
 nmap <C-o> :Telescope buffers<CR>
-nmap <C-i> :Lspsaga outline<CR>
+nmap <C-i> :Navbuddy<CR>
 
 
 nmap <leader>tc :Telescope current_buffer_fuzzy_find<CR>
 nmap <leader>tg :Telescope live_grep<CR>
 nmap <leader>tt :Telescope treesitter<CR>
 nmap <leader>tr :Telescope command_history<CR>
-
