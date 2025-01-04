@@ -1,9 +1,10 @@
-colorscheme gruvbox
+colorscheme afterglow
 set termguicolors
 set nu rnu
 set expandtab autoindent smartindent
 set incsearch hlsearch
 set clipboard+=unnamedplus
+set spell spelllang=en_us
 
 let mapleader= " "
 let g:do_filetype_lua = 1
@@ -20,9 +21,6 @@ nmap <leader>h :BufferLineCyclePrev<CR>
 nmap <leader>e :BufferLinePick<CR>
 nmap <leader>d :BufferLinePickClose<CR>
 
-nmap <C-p> :Telescope find_files<CR>
-nmap <C-s> :Telescope live_grep<CR>
-nmap <C-o> :Telescope buffers<CR>
 nmap <C-i> :Navbuddy<CR>
 
 
@@ -30,3 +28,5 @@ nmap <leader>tc :Telescope current_buffer_fuzzy_find<CR>
 nmap <leader>tg :Telescope live_grep<CR>
 nmap <leader>tt :Telescope treesitter<CR>
 nmap <leader>tr :Telescope command_history<CR>
+nmap <leader>tf :Telescope find_files<CR>
+nmap <leader>tb :Telescope buffers<CR>

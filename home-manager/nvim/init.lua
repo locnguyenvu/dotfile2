@@ -23,7 +23,22 @@ require('nvim-cursorline').setup {
 }
 
 vim.opt.termguicolors = true
-require("bufferline").setup {}
+require("bufferline").setup {
+  options = {
+    groups = { 
+      items = {
+        {
+          name = "empty", -- Mandatory
+          highlight = {underline = true, sp = "blue"}, -- Optional
+          icon = " ", -- Optional
+          matcher = function(buf) -- Mandatory
+            return buf.name:match('leftpad') or buf.name:match('rightpad')
+          end
+        }
+      }
+    }
+  }
+}
 
 require("nvim-tree").setup {
   auto_reload_on_write = false,
@@ -82,6 +97,15 @@ require'nvim-treesitter.configs'.setup {
   incremental_selection = { enable = true },
   textobjects = { enable = true },
 }
+
+-- Telescope
+require('telescope').setup({
+  defaults = {
+    layout_config = {
+      vertical = { width = 0.95 }
+    },
+  },
+})
 
 -- Flash.nvim
 vim.keymap.set({ 'n', 'x', 'o' }, 's', function() require('flash').jump() end)

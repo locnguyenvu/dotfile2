@@ -38,6 +38,7 @@ with builtins;
   home.sessionVariables = {
     EDITOR = "nvim";
     GIT_PAGER = "delta";
+    NIXPKGS_ALLOW_UNFREE = 1;
   };
 
   # Let Home Manager install and manage itself.
@@ -50,11 +51,15 @@ with builtins;
     };
     shellAliases = {
       ll = "eza -l --icons";
+      zel = "zellij";
     };
     history = {
       size = 10000;
       path = "${config.xdg.dataHome}/zsh/history";
     };
+    initExtra = ''
+      bindkey "^F" fzf-file-widget
+    '';
     prezto = {
       enable = true;
       editor = {
@@ -109,6 +114,7 @@ with builtins;
       bind-key c new-window -c "#{pane_current_path}"
       bind | split-window -h -c "#{pane_current_path}"
       bind - split-window -v -c "#{pane_current_path}"
+      set -g default-command $SHELL
       '';
     plugins = with pkgs; [
       tmuxPlugins.cpu
@@ -168,7 +174,7 @@ with builtins;
       telescope-nvim
       vim-fugitive
       vim-repeat
-      (exVimPlugin { user = "smithbm2316"; repo = "centerpad.nvim"; })
+      (exVimPlugin{ user="danilo-augusto"; repo="vim-afterglow"; rev="master"; })
     ];
   };
   programs.zoxide = {
@@ -192,10 +198,17 @@ with builtins;
     ];
   };
   programs.eza = {
-      enable = true;
-      enableZshIntegration = true;
+    enable = true;
+    enableZshIntegration = true;
   };
   programs.jujutsu = {
-      enable = true;
+    enable = true;
+  };
+  programs.zellij = {
+    enable = true;
+    enableZshIntegration = false;
+    settings = {
+      simplified_ui = true;
+    };
   };
 }
