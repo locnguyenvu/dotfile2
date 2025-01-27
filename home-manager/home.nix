@@ -11,7 +11,7 @@ with builtins;
   home.username = "#username";
   home.homeDirectory = "#homedir";
 
-  home.stateVersion = "24.05"; # Please read the comment before changing.
+  home.stateVersion = "24.11"; # Please read the comment before changing.
   home.enableNixpkgsReleaseCheck = false;
 
   home.packages = [
@@ -174,7 +174,9 @@ with builtins;
       telescope-nvim
       vim-fugitive
       vim-repeat
+      vim-commentary
       (exVimPlugin{ user="danilo-augusto"; repo="vim-afterglow"; rev="master"; })
+      (exVimPlugin{ user="wadackel"; repo="vim-dogrun"; rev="master"; })
     ];
   };
   programs.zoxide = {
@@ -209,6 +211,7 @@ with builtins;
     enableZshIntegration = false;
     settings = {
       simplified_ui = true;
+      default_layout = "compact";
     };
   };
 }

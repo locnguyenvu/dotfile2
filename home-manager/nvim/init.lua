@@ -67,23 +67,23 @@ vim.opt.list = true
 vim.opt.listchars:append "space:⋅"
 vim.opt.listchars:append "eol:↴"
 local ibl_highlight = {
-    "RainbowRed",
-    "RainbowYellow",
-    "RainbowBlue",
-    "RainbowOrange",
-    "RainbowGreen",
-    "RainbowViolet",
-    "RainbowCyan",
+  "RainbowRed",
+  "RainbowYellow",
+  "RainbowBlue",
+  "RainbowOrange",
+  "RainbowGreen",
+  "RainbowViolet",
+  "RainbowCyan",
 }
 local hooks = require "ibl.hooks"
 hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-    vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
-    vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
-    vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
-    vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
-    vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
-    vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
-    vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
+  vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
+  vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
+  vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
+  vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
+  vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
+  vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
+  vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
 end)
 
 require("ibl").setup { indent = { highlight = ibl_highlight } }
@@ -218,3 +218,28 @@ if vim.fn.executable('ruff') == 1 then
   }
 end
 
+
+--- custom fordmethod
+local middot = '·'
+local raquo = '»'
+local small_l = 'ℓ'
+_G.foldtext = function()
+  local line_count = vim.v.foldend - vim.v.foldstart + 1
+  local lines = '[' .. line_count .. small_l .. ']'
+  local first = vim.api.nvim_buf_get_lines(0, vim.v.foldstart - 1, vim.v.foldstart, true)[1]
+  local tabs = first:match('^%s*'):gsub(' +', ''):len()
+  local spaces = first:match('^%s*'):gsub('\t', ''):len()
+  local indent = spaces + tabs * vim.bo.tabstop
+  local stripped = first:match('^%s*(.-)$')
+  local prefix = raquo .. middot .. middot .. lines
+  local suffix = ': '
+
+  -- Can't usefully use string.len() on UTF-8.
+  local prefix_len = tostring(line_count):len() + 6
+
+  local dash_count = math.max(indent - prefix_len - string.len(suffix), 0)
+  local dashes = string.rep(middot, dash_count)
+  return prefix .. dashes .. suffix .. stripped
+end
+
+vim.opt.foldtext = 'v:lua.foldtext()'
