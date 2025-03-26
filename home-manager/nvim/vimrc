@@ -1,4 +1,4 @@
-colorscheme dogrun
+colorscheme tender
 set termguicolors
 set nu rnu
 set expandtab autoindent smartindent
@@ -30,5 +30,7 @@ nmap <leader>tt :Telescope treesitter<CR>
 nmap <leader>tr :Telescope command_history<CR>
 nmap <leader>tf :Telescope find_files<CR>
 nmap <leader>tb :Telescope buffers<CR>
+
+tnoremap <A-c> <C-\><C-N>
 
 filetype plugin indent on

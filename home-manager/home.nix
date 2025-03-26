@@ -23,9 +23,12 @@ with builtins;
     pkgs.fx
     pkgs.httpie
     pkgs.inconsolata-nerdfont
+    pkgs.fira-code-nerdfont
+    pkgs.jetbrains-mono
     pkgs.procs
     pkgs.pueue
     pkgs.ripgrep
+    pkgs.skim
     pkgs.yq-go
     pkgs.zoxide
   ];
@@ -52,6 +55,11 @@ with builtins;
     shellAliases = {
       ll = "eza -l --icons";
       zel = "zellij";
+      wez = "wezterm";
+      gfmc = ''git pull origin $(git branch --show-current)'';
+      gcof = ''git checkout $(git branch --list | rg -v $(git branch --show-current) | fzf)'';
+      pc = "process-compose";
+      kb = "kubectl";
     };
     history = {
       size = 10000;
@@ -161,6 +169,7 @@ with builtins;
       cmp-nvim-lua
       flash-nvim
       gruvbox
+      hologram-nvim
       indent-blankline-nvim
       lspsaga-nvim
       lualine-nvim
@@ -172,11 +181,10 @@ with builtins;
       nvim-treesitter.withAllGrammars
       nvim-web-devicons
       telescope-nvim
+      tender-vim
+      vim-commentary
       vim-fugitive
       vim-repeat
-      vim-commentary
-      (exVimPlugin{ user="danilo-augusto"; repo="vim-afterglow"; rev="master"; })
-      (exVimPlugin{ user="wadackel"; repo="vim-dogrun"; rev="master"; })
     ];
   };
   programs.zoxide = {
@@ -196,7 +204,6 @@ with builtins;
       ".rgignore"
       ".venv"
       "_"
-      "local*.nix"
     ];
   };
   programs.eza = {
@@ -210,7 +217,6 @@ with builtins;
     enable = true;
     enableZshIntegration = false;
     settings = {
-      simplified_ui = true;
       default_layout = "compact";
     };
   };
