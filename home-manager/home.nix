@@ -91,6 +91,16 @@ with builtins;
       prompt = {
         theme = "nicoulaj";
       };
+      syntaxHighlighting = {
+        highlighters = [
+          "main"
+          "brackets"
+          "pattern"
+          "line"
+          "cursor"
+          "root"
+        ];
+      };
     };
   };
   programs.direnv = {
@@ -185,6 +195,7 @@ with builtins;
       vim-commentary
       vim-fugitive
       vim-repeat
+      (exVimPlugin{ user="mikesmithgh"; repo="kitty-scrollback.nvim"; rev="main"; })
     ];
   };
   programs.zoxide = {
