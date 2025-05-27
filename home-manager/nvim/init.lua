@@ -187,6 +187,9 @@ local on_attach = function(client, bufnr)
 end
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
+-- Kitty-scrollback
+require('kitty-scrollback').setup()
+
 -- NVIM LSP config
 if vim.fn.executable('pylsp') == 1 then
   require'lspconfig'.pylsp.setup {

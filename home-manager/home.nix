@@ -11,19 +11,20 @@ with builtins;
   home.username = "#username";
   home.homeDirectory = "#homedir";
 
-  home.stateVersion = "24.11"; # Please read the comment before changing.
+  home.stateVersion = "25.05"; # Please read the comment before changing.
   home.enableNixpkgsReleaseCheck = false;
 
   home.packages = [
     pkgs._7zz
     pkgs.ast-grep
     pkgs.delta
+    pkgs.duckdb
     pkgs.eza
     pkgs.fd
     pkgs.fx
     pkgs.httpie
-    pkgs.inconsolata-nerdfont
-    pkgs.fira-code-nerdfont
+    pkgs.nerd-fonts.inconsolata
+    pkgs.nerd-fonts.fira-code
     pkgs.jetbrains-mono
     pkgs.procs
     pkgs.pueue
@@ -65,8 +66,9 @@ with builtins;
       size = 10000;
       path = "${config.xdg.dataHome}/zsh/history";
     };
-    initExtra = ''
+    initContent = ''
       bindkey "^F" fzf-file-widget
+      bindkey "^H" fzf-history-widget
     '';
     prezto = {
       enable = true;
@@ -229,6 +231,15 @@ with builtins;
     enableZshIntegration = false;
     settings = {
       default_layout = "compact";
+    };
+  };
+  programs.atuin = {
+    enable = true;
+    enableZshIntegration = true;
+    settings = {
+      filter_mode_shell_up_key_binding = "session";
+      keymap_mode = "vim-normal";
+      enter_accept = true;
     };
   };
 }
