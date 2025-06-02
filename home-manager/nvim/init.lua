@@ -1,10 +1,10 @@
 require('lualine').setup {
   sections = {
-    lualine_b = {'diff', 'diagnostics'},
+    lualine_b = {'branch', 'diff', 'diagnostics'},
     lualine_c = {{'filename', path = 1}}
   },
   inactive_sections = {
-    lualine_b = {'diff', 'diagnostics'},
+    lualine_b = {'branch', 'diff', 'diagnostics'},
     lualine_c = {{'filename', path = 1}}
   }
 }
@@ -246,3 +246,19 @@ _G.foldtext = function()
 end
 
 vim.opt.foldtext = 'v:lua.foldtext()'
+
+-- Fugitive extends commands
+-- fetch and merge current active branch only
+vim.api.nvim_create_user_command('Gfm', function()
+  local handle = io.popen("git branch --show-current")
+  local current_branch = handle:read("*a"):gsub("%s+", "")
+  handle:close()
+  if current_branch == "" then
+    vim.notify("Error: Could not determine current branch", vim.log.levels.ERROR)
+    return
+  end
+  local git_cmd = string.format("Git pull origin %s", current_branch)
+  vim.cmd(git_cmd)
+end, {
+  desc = 'Git fetch and merge current branch from origin'
+})
