@@ -217,10 +217,15 @@ if vim.fn.executable('ruff') == 1 then
         -- Server settings should go here
         builtins = {"ic", "snoop", "pp"}
       }
-  }
+    }
   }
 end
 
+if vim.fn.executable('gopls') == 1 then
+  require"lspconfig".gopls.setup({
+    on_attach = on_attach,
+  })
+end
 
 --- custom fordmethod
 local middot = '·'

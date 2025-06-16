@@ -4,7 +4,6 @@ set nu rnu
 set expandtab autoindent smartindent
 set incsearch hlsearch
 set clipboard+=unnamedplus
-set spell spelllang=en_us
 
 let mapleader= " "
 let g:do_filetype_lua = 1
