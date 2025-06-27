@@ -1,6 +1,8 @@
+-- vim: ts=2 sw=2 autoindent expandtab
+
 require('lualine').setup {
   sections = {
-    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_b = {{'lsp_status'}},
     lualine_c = {{'filename', path = 1}}
   },
   inactive_sections = {
@@ -55,7 +57,7 @@ require("nvim-tree").setup {
   },
   filters = {
     custom = { '__pycache__', '*.egg-info', 'node_modules', '.venv' },
-  exclude = {},
+    exclude = {},
   },
   git = {
     ignore = true,
@@ -121,7 +123,7 @@ require('lspsaga').setup({
     enable = false
   },
   breadcrumbs = {
-    enable = false
+    enable = true
   }
 })
 vim.keymap.set({'n','t'}, '<F12>', '<cmd>Lspsaga term_toggle<CR>')
@@ -149,21 +151,32 @@ cmp.setup {
   }
 }
 
+
+-- Kitty-scrollback
+require('kitty-scrollback').setup()
+
+-- Nvim LSP config
+--
+---- navbuddy
+local navbuddy = require('nvim-navbuddy')
+navbuddy.setup{
+  window = {
+    size = { height = '80%', width = '70%' },
+  },
+  lsp = {
+    auto_attach = true,
+    preference = {'pylsp'}
+  }
+}
+
 local opts = { noremap=true, silent=true }
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
 vim.keymap.set('n', '<space>w', vim.diagnostic.open_float, opts)
 vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
-local navbuddy = require('nvim-navbuddy')
-navbuddy.setup{
-  lsp = {
-    auto_attach = true,
-    preference = {'pylsp'}
-  }
-}
 local on_attach = function(client, bufnr)
-  -- navbuddy.attach(client, bufnr)
+  navbuddy.attach(client, bufnr)
   -- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
@@ -171,26 +184,22 @@ local on_attach = function(client, bufnr)
   local bufopts = { noremap=true, silent=true, buffer=bufnr }
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+  vim.keymap.set('n', 'gi', '<cmd>Lspsaga finder imp<CR>', bufopts)
+  vim.keymap.set('n', 'gr', '<cmd>Lspsaga finder ref<CR>', bufopts)
   vim.keymap.set('n', 'K', '<cmd>Lspsaga peek_definition<CR>', bufopts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
   vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
   vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
   vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
   vim.keymap.set('n', '<space>wl', function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, bufopts)
-  vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-  vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-  -- vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', 'gr', '<cmd>Lspsaga finder<CR>', bufopts)
+  vim.keymap.set('n', '<space>D', '<cmd>Lspsaga peek_type_definition<CR>', bufopts)
+  vim.keymap.set('n', '<space>rn', '<cmd>Lspsaga rename<CR>', bufopts)
+  vim.keymap.set('n', '<space>ca', '<cmd>Lspsaga code_action<CR>', bufopts)
 end
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
--- Kitty-scrollback
-require('kitty-scrollback').setup()
-
--- NVIM LSP config
+-- LSP Python setup
 if vim.fn.executable('pylsp') == 1 then
   require'lspconfig'.pylsp.setup {
     capabilities = capabilities,
@@ -207,7 +216,6 @@ if vim.fn.executable('pylsp') == 1 then
     }
   }
 end
-
 if vim.fn.executable('ruff') == 1 then
   require'lspconfig'.ruff.setup {
     capabilities = capabilities,
@@ -221,9 +229,23 @@ if vim.fn.executable('ruff') == 1 then
   }
 end
 
+-- LSP Go setup
+if vim.fn.executable('go') == 1 then
+  require'go'.setup{}
+end
 if vim.fn.executable('gopls') == 1 then
   require"lspconfig".gopls.setup({
     on_attach = on_attach,
+  })
+end
+if vim.fn.executable('goimports') == 1 then
+  local format_sync_grp = vim.api.nvim_create_augroup("GoFormat", {})
+  vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*.go",
+    callback = function()
+     require('go.format').goimports()
+    end,
+    group = format_sync_grp,
   })
 end
 

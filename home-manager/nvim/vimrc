@@ -21,6 +21,13 @@ nmap <leader>e :BufferLinePick<CR>
 nmap <leader>d :BufferLinePickClose<CR>
 
 nmap <C-i> :Navbuddy<CR>
+nmap <leader>so :Lspsaga outline<CR>
+
+" Keymap for windows manager
+nmap <leader>w= :vsplit %<CR>
+nmap <leader>w- :split %<CR>
+nmap <leader>wc :close<CR>
+nmap <leader>wo :only<CR>
 
 
 nmap <leader>tc :Telescope current_buffer_fuzzy_find<CR>

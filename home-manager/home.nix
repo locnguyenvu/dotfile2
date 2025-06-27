@@ -23,11 +23,14 @@ with builtins;
     pkgs.fd
     pkgs.fx
     pkgs.httpie
+    pkgs.hurl
+    pkgs.mitmproxy
     pkgs.nerd-fonts.inconsolata
     pkgs.nerd-fonts.fira-code
-    pkgs.jetbrains-mono
+    pkgs.nerd-fonts.jetbrains-mono
+    pkgs.nerd-fonts.daddy-time-mono
     pkgs.procs
-    pkgs.pueue
+    pkgs.process-compose
     pkgs.ripgrep
     pkgs.skim
     pkgs.yq-go
@@ -185,6 +188,9 @@ with builtins;
       indent-blankline-nvim
       lspsaga-nvim
       lualine-nvim
+      go-nvim
+      nvim-dap
+      nvim-dap-ui
       nvim-cmp
       nvim-cursorline
       nvim-navbuddy
@@ -217,6 +223,7 @@ with builtins;
       ".rgignore"
       ".venv"
       "_"
+      "__debug_bin*"
     ];
   };
   programs.eza = {
@@ -240,6 +247,7 @@ with builtins;
       filter_mode_shell_up_key_binding = "session";
       keymap_mode = "vim-normal";
       enter_accept = true;
+      invert = true;
     };
   };
 }
