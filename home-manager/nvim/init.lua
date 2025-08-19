@@ -249,6 +249,11 @@ if vim.fn.executable('goimports') == 1 then
   })
 end
 
+--- LSP ruby-lsp
+if vim.fn.executable('ruby-lsp') == 1 then
+  vim.lsp.enable('ruby_lsp')
+end
+
 --- custom fordmethod
 local middot = '·'
 local raquo = '»'

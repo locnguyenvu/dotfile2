@@ -1,0 +1,5 @@
+cmd + shift - 0 : open /Applications/kitty.app
+cmd + shift - 1 : open /Applications/Firefox.app
+cmd + shift - 2 : open '/Applications/Google Chrome.app'
+cmd + shift - 3 : open /Applications/Safari.app
+cmd + shift - 9 : open /Applications/Trae.app

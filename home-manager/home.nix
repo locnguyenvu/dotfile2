@@ -29,6 +29,7 @@ with builtins;
     pkgs.nerd-fonts.fira-code
     pkgs.nerd-fonts.jetbrains-mono
     pkgs.nerd-fonts.daddy-time-mono
+    pkgs.cascadia-code
     pkgs.procs
     pkgs.process-compose
     pkgs.ripgrep
@@ -178,6 +179,10 @@ with builtins;
     withNodeJs = true;
     extraConfig = builtins.readFile nvim/vimrc;
     extraLuaConfig = builtins.readFile nvim/init.lua;
+    extraWrapperArgs = [
+        "--set" "BUNDLE_DISABLE_SHARED_GEMS" "true"
+        "--unset" "GEM_HOME"
+    ];
     plugins = with pkgs.vimPlugins; [
       bufferline-nvim
       cmp-nvim-lsp
@@ -203,7 +208,7 @@ with builtins;
       vim-commentary
       vim-fugitive
       vim-repeat
-      (exVimPlugin{ user="mikesmithgh"; repo="kitty-scrollback.nvim"; rev="main"; })
+      kitty-scrollback-nvim
     ];
   };
   programs.zoxide = {
@@ -249,5 +254,8 @@ with builtins;
       enter_accept = true;
       invert = true;
     };
+  };
+  services.skhd = {
+    enable = true;
   };
 }
