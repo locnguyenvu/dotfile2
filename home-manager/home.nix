@@ -34,6 +34,7 @@ with builtins;
     pkgs.process-compose
     pkgs.ripgrep
     pkgs.skim
+    pkgs.yazi
     pkgs.yq-go
     pkgs.zoxide
   ];
@@ -59,8 +60,6 @@ with builtins;
     };
     shellAliases = {
       ll = "eza -l --icons";
-      zel = "zellij";
-      wez = "wezterm";
       gfmc = ''git pull origin $(git branch --show-current)'';
       gcof = ''git checkout $(git branch --list | rg -v $(git branch --show-current) | fzf)'';
       pc = "process-compose";
@@ -70,9 +69,11 @@ with builtins;
       size = 10000;
       path = "${config.xdg.dataHome}/zsh/history";
     };
-    initContent = ''
-      bindkey "^F" fzf-file-widget
-      bindkey "^H" fzf-history-widget
+    profileExtra = ''
+    path=(
+      $HOME/.local/bin
+      $path
+    )
     '';
     prezto = {
       enable = true;
@@ -209,6 +210,7 @@ with builtins;
       vim-fugitive
       vim-repeat
       kitty-scrollback-nvim
+      yazi-nvim
     ];
   };
   programs.zoxide = {
@@ -248,11 +250,14 @@ with builtins;
   programs.atuin = {
     enable = true;
     enableZshIntegration = true;
+    flags = ["--disable-ctrl-r"];
     settings = {
       filter_mode_shell_up_key_binding = "session";
       keymap_mode = "vim-normal";
       enter_accept = true;
-      invert = true;
+      invert = false;
+      inline_height = 10;
+      ctrl_n_shortcuts = true;
     };
   };
   services.skhd = {
