@@ -11,7 +11,7 @@ with builtins;
   home.username = "#username";
   home.homeDirectory = "#homedir";
 
-  home.stateVersion = "25.05"; # Please read the comment before changing.
+  home.stateVersion = "unstable"; # Please read the comment before changing.
   home.enableNixpkgsReleaseCheck = false;
 
   home.packages = [

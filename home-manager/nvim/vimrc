@@ -16,7 +16,9 @@ nmap <leader>nf :NvimTreeFindFile<CR>
 nmap <leader>nr :NvimTreeRefresh<CR>
 
 nmap <leader>l :BufferLineCycleNext<CR>
+nmap <leader>L :BufferLineMoveNext<CR>
 nmap <leader>h :BufferLineCyclePrev<CR>
+nmap <leader>H :BufferLineMovePrev<CR>
 nmap <leader>e :BufferLinePick<CR>
 nmap <leader>d :BufferLinePickClose<CR>
 
