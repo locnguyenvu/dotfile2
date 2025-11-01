@@ -21,6 +21,11 @@ nmap <leader>h :BufferLineCyclePrev<CR>
 nmap <leader>H :BufferLineMovePrev<CR>
 nmap <leader>e :BufferLinePick<CR>
 nmap <leader>d :BufferLinePickClose<CR>
+nmap <leader>bo :BufferLineCloseOthers<CR>
+nmap <leader>br :BufferLineCloseRight<CR>
+nmap <leader>bl :BufferLineCloseLeft<CR>
+nmap <leader>bp :BufferLineTogglePin<CR>
+nmap <leader>b1 :BufferLineGoToBuffer 1<CR>
 
 nmap <C-i> :Navbuddy<CR>
 nmap <leader>so :Lspsaga outline<CR>
@@ -39,6 +44,12 @@ nmap <leader>tr :Telescope command_history<CR>
 nmap <leader>tf :Telescope find_files<CR>
 nmap <leader>tb :Telescope buffers<CR>
 
-tnoremap <A-c> <C-\><C-N>
+nmap <leader>yt :Yazi<CR>
+nmap <leader>yc :Yazi cwd<CR>
+
+tnoremap <C-`> <C-\><C-N>
+tnoremap <F12> :terminal<CR>
+tnoremap <A-l> <C-\><C-N>:BufferLineCycleNext<CR>
+tnoremap <A-h> <C-\><C-N>:BufferLineCyclePrev<CR>
 
 filetype plugin indent on

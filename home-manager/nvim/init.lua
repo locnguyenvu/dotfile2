@@ -43,6 +43,12 @@ require("bufferline").setup {
           end
         }
       }
+    },
+    offsets = {
+      filetype = "NvimTree",
+      text = "File Explorer",
+      highlight = "Directory",
+      separator = true -- use a "true" to enable the default, or set your own character
     }
   }
 }
@@ -53,9 +59,9 @@ require("nvim-tree").setup {
   auto_reload_on_write = false,
   view = {
     relativenumber = true, 
-    width = 50,
+    width = 35,
     float = {
-      enable = false,
+      enable = true,
       quit_on_focus_loss = true,
       open_win_config = {
         width = 50
@@ -134,7 +140,6 @@ require('lspsaga').setup({
     enable = true
   }
 })
-vim.keymap.set({'n','t'}, '<F12>', '<cmd>Lspsaga term_toggle<CR>')
 -- }}}
 ---- CMP {{{
 local cmp = require'cmp'
@@ -342,4 +347,105 @@ vim.api.nvim_create_user_command('Gfm', function()
 end, {
   desc = 'Git fetch and merge current branch from origin'
 })
+-- }}}
+
+-- Plugin
+-- Open file {{{
+
+local Lzof = {}
+
+local function get_visual_selection()
+  local _, srow, scol = unpack(vim.fn.getpos("'<"))
+  local _, erow, ecol = unpack(vim.fn.getpos("'>"))
+
+  if srow == erow then
+    local line = vim.fn.getline(srow)
+    return line:sub(scol, ecol)
+  end
+
+  local lines = vim.fn.getline(srow, erow)
+  lines[1] = lines[1]:sub(scol)
+  lines[#lines] = lines[#lines]:sub(1, ecol)
+  return table.concat(lines, "\n")
+end
+
+local function file_exists(path)
+  local stat = vim.loop.fs_stat(path)
+  return stat ~= nil
+end
+
+local function resolve_path(path)
+  if path:sub(1, 1) == "~" then
+    return vim.fn.expand(path)
+  end
+
+  if path:sub(1, 1) == "/" then
+    return path
+  end
+
+  local cwd = vim.fn.getcwd()
+  return cwd .. "/" .. path
+end
+
+local function open_file(path, split_type)
+  if not file_exists(path) then
+    vim.notify(string.format("File not found: %s", path), vim.log.levels.WARN)
+    return
+  end
+
+  local cmd
+  if split_type == "split" then
+    cmd = "split"
+  elseif split_type == "vsplit" then
+    cmd = "vsplit"
+  elseif split_type == "tabnew" then
+    cmd = "tabnew"
+  else
+    cmd = "edit"
+  end
+
+  vim.cmd(string.format("%s %s", cmd, vim.fn.fnameescape(path)))
+  -- vim.notify(string.format("Opened: %s", path), vim.log.levels.INFO)
+end
+
+function Lzof.open_path_from_selection(split_type)
+  local selected_text = get_visual_selection()
+
+  if not selected_text or selected_text == "" then
+    vim.notify("No text selected", vim.log.levels.WARN)
+    return
+  end
+
+
+  local path = vim.fn.trim(selected_text):gsub("\n", "")
+  local resolved_path = resolve_path(path)
+  open_file(resolved_path, split_type)
+end
+
+function Lzof.setup(opts)
+  opts = opts or {
+    keymaps = true
+  }
+  vim.api.nvim_create_user_command("LFOpenPath", function()
+    Lzof.open_path_from_selection()
+  end, { range = true, desc = "Open file path from visual selection" })
+
+  vim.api.nvim_create_user_command("LFOpenPathSplit", function()
+    Lzof.open_path_from_selection("split")
+  end, { range = true, desc = "Open file path in horizontal split" })
+
+  vim.api.nvim_create_user_command("LFOpenPathVsplit", function()
+    Lzof.open_path_from_selection("vsplit")
+  end, { range = true, desc = "Open file path in vertical split" })
+
+  vim.api.nvim_create_user_command("LFOpenPathTab", function()
+    Lzof.open_path_from_selection("tabnew")
+  end, { range = true, desc = "Open file path in new tab" })
+
+  if opts.keymaps ~= false then
+    local map_opts = { noremap = true, silent = true }
+    vim.keymap.set("v", "<leader>gf", "<cmd>LFOpenPath<cr>", map_opts)
+  end
+end
+Lzof.setup({keymaps = true})
 -- }}}
