@@ -118,6 +118,19 @@ vim.keymap.set({ 'c' }, '<c-s>', function() require('flash').toggle() end)
 -- Kitty-scrollback
 require('kitty-scrollback').setup()
 
+-- toggle term {{{
+require('toggleterm').setup({
+  size = function(term)
+    if term.direction == "horizontal" then
+      return 25
+    elseif term.direction == "vertical" then
+      return vim.o.columns * 0.4
+    end
+  end,
+  direction = "horizontal"
+})
+-- }}}
+
 -- Nvim LSP config
 ---- navbuddy {{{
 local navbuddy = require('nvim-navbuddy')
@@ -270,14 +283,6 @@ if vim.fn.executable('ruby-lsp') == 1 then
   vim.lsp.enable('ruby_lsp')
 end
 -- }}}
---- LSP vue {{{
-vim.lsp.config('vue_ls', {
-  cmd = { "npx", "vue-language-server", "--stdio" },
-})
-vim.lsp.config('vtsls', {
-  cmd = { "npx", "vtsls", "--stdio" },
-})
--- }}}
 
 -- Custom display
 ---- folding {{{
@@ -354,61 +359,87 @@ end, {
 
 local Lzof = {}
 
-local function get_visual_selection()
-  local _, srow, scol = unpack(vim.fn.getpos("'<"))
-  local _, erow, ecol = unpack(vim.fn.getpos("'>"))
-
-  if srow == erow then
-    local line = vim.fn.getline(srow)
-    return line:sub(scol, ecol)
+function Lzof.open_file(path, close_terminal)
+  local function parse_path_with_position(path_string)
+    local p, line, col = path_string:match("^(.+):(%d+)(?::(%d+))?$")
+    if p then
+      return p, tonumber(line), tonumber(col)
+    end
+    return path_string, nil, nil
   end
 
-  local lines = vim.fn.getline(srow, erow)
-  lines[1] = lines[1]:sub(scol)
-  lines[#lines] = lines[#lines]:sub(1, ecol)
-  return table.concat(lines, "\n")
-end
-
-local function file_exists(path)
-  local stat = vim.loop.fs_stat(path)
-  return stat ~= nil
-end
-
-local function resolve_path(path)
-  if path:sub(1, 1) == "~" then
-    return vim.fn.expand(path)
+  local function file_exists(file_path)
+    local stat = vim.loop.fs_stat(file_path)
+    return stat ~= nil
   end
 
-  if path:sub(1, 1) == "/" then
-    return path
-  end
+  local line, col = nil, nil
+  path, line, col = parse_path_with_position(path)
 
-  local cwd = vim.fn.getcwd()
-  return cwd .. "/" .. path
-end
-
-local function open_file(path, split_type)
   if not file_exists(path) then
     vim.notify(string.format("File not found: %s", path), vim.log.levels.WARN)
     return
   end
 
-  local cmd
-  if split_type == "split" then
-    cmd = "split"
-  elseif split_type == "vsplit" then
-    cmd = "vsplit"
-  elseif split_type == "tabnew" then
-    cmd = "tabnew"
-  else
-    cmd = "edit"
+  local escaped_path = vim.fn.fnameescape(path)
+
+  -- Check if current window is a terminal
+  local current_bufnr = vim.api.nvim_get_current_buf()
+  local current_buftype = vim.api.nvim_buf_get_option(current_bufnr, "buftype")
+
+  if current_buftype == "terminal" then
+    if close_terminal and #vim.api.nvim_list_wins() > 1 then
+      vim.api.nvim_win_close(vim.api.nvim_get_current_win(), false)
+    end
+    local windows = vim.api.nvim_list_wins()
+
+    for _, winid in ipairs(windows) do
+      local bufnr = vim.api.nvim_win_get_buf(winid)
+      local buftype = vim.api.nvim_buf_get_option(bufnr, "buftype")
+
+      if buftype ~= "terminal" then
+        vim.api.nvim_set_current_win(winid)
+        break
+      end
+    end
   end
 
-  vim.cmd(string.format("%s %s", cmd, vim.fn.fnameescape(path)))
-  -- vim.notify(string.format("Opened: %s", path), vim.log.levels.INFO)
+  vim.cmd(string.format("edit %s", escaped_path))
+
+  if line then
+    vim.api.nvim_win_set_cursor(0, { line, col or 0 })
+  end
 end
 
-function Lzof.open_path_from_selection(split_type)
+function Lzof.open_path_from_selection(close_terminal)
+  local function get_visual_selection()
+    local _, srow, scol = unpack(vim.fn.getpos("'<"))
+    local _, erow, ecol = unpack(vim.fn.getpos("'>"))
+
+    if srow == erow then
+      local line = vim.fn.getline(srow)
+      return line:sub(scol, ecol)
+    end
+
+    local lines = vim.fn.getline(srow, erow)
+    lines[1] = lines[1]:sub(scol)
+    lines[#lines] = lines[#lines]:sub(1, ecol)
+    return table.concat(lines, "\n")
+  end
+
+  local function resolve_path(file_path)
+    if file_path:sub(1, 1) == "~" then
+      return vim.fn.expand(file_path)
+    end
+
+    if file_path:sub(1, 1) == "/" then
+      return file_path
+    end
+
+    local cwd = vim.fn.getcwd()
+    return cwd .. "/" .. file_path
+  end
+
   local selected_text = get_visual_selection()
 
   if not selected_text or selected_text == "" then
@@ -416,35 +447,22 @@ function Lzof.open_path_from_selection(split_type)
     return
   end
 
-
   local path = vim.fn.trim(selected_text):gsub("\n", "")
   local resolved_path = resolve_path(path)
-  open_file(resolved_path, split_type)
+  Lzof.open_file(resolved_path, close_terminal)
 end
 
 function Lzof.setup(opts)
   opts = opts or {
     keymaps = true
   }
-  vim.api.nvim_create_user_command("LFOpenPath", function()
-    Lzof.open_path_from_selection()
-  end, { range = true, desc = "Open file path from visual selection" })
-
-  vim.api.nvim_create_user_command("LFOpenPathSplit", function()
-    Lzof.open_path_from_selection("split")
-  end, { range = true, desc = "Open file path in horizontal split" })
-
-  vim.api.nvim_create_user_command("LFOpenPathVsplit", function()
-    Lzof.open_path_from_selection("vsplit")
-  end, { range = true, desc = "Open file path in vertical split" })
-
-  vim.api.nvim_create_user_command("LFOpenPathTab", function()
-    Lzof.open_path_from_selection("tabnew")
-  end, { range = true, desc = "Open file path in new tab" })
+  vim.api.nvim_create_user_command("LFOpenPath", function(args)
+    local close_terminal = args.bang
+    Lzof.open_path_from_selection(close_terminal)
+  end, { range = true, bang = true, desc = "Open file path from visual selection" })
 
   if opts.keymaps ~= false then
-    local map_opts = { noremap = true, silent = true }
-    vim.keymap.set("v", "<leader>gf", "<cmd>LFOpenPath<cr>", map_opts)
+    vim.keymap.set('v', 'gf', ':LFOpenPath!<CR>', { silent = true })
   end
 end
 Lzof.setup({keymaps = true})

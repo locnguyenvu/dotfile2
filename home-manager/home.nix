@@ -12,7 +12,7 @@ with builtins;
   home.homeDirectory = "#homedir";
 
   home.stateVersion = "unstable"; # Please read the comment before changing.
-  home.enableNixpkgsReleaseCheck = false;
+  home.enableNixpkgsReleaseCheck = true;
 
   home.packages = [
     pkgs._7zz
@@ -61,7 +61,7 @@ with builtins;
     shellAliases = {
       ll = "eza -l --icons";
       gfmc = ''git pull origin $(git branch --show-current)'';
-      gcof = ''git checkout $(git branch --list | rg -v $(git branch --show-current) | fzf)'';
+      gcof = ''git checkout $(git branch --list | rg -v $(git branch --show-current) | sk)'';
       pc = "process-compose";
       kb = "kubectl";
     };
@@ -206,6 +206,7 @@ with builtins;
       nvim-web-devicons
       telescope-nvim
       tender-vim
+      toggleterm-nvim
       vim-commentary
       vim-fugitive
       vim-repeat
@@ -217,20 +218,20 @@ with builtins;
     enable = true;
     enableZshIntegration = true;
   };
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
+    enableJujutsuIntegration = true;
+    options = {
+      features = "decorations side-by-side line-number";
+    };
+  };
   programs.git = {
     enable = true;
-    delta = {
-      enable = true;
-      options = {
-        features = "decorations side-by-side line-number";
-      };
-    };
     ignores = [
       ".env*"
       ".rgignore"
       ".venv"
-      "_"
-      "__debug_bin*"
     ];
   };
   programs.eza = {
@@ -250,10 +251,9 @@ with builtins;
   programs.atuin = {
     enable = true;
     enableZshIntegration = true;
-    flags = ["--disable-ctrl-r"];
     settings = {
       filter_mode_shell_up_key_binding = "session";
-      keymap_mode = "vim-normal";
+      keymap_mode = "vim-insert";
       enter_accept = true;
       invert = false;
       inline_height = 10;
