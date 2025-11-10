@@ -127,7 +127,9 @@ require('toggleterm').setup({
       return vim.o.columns * 0.4
     end
   end,
-  direction = "horizontal"
+  direction = "horizontal",
+  start_in_insert = true,
+  persist_mode = false
 })
 -- }}}
 

@@ -47,10 +47,13 @@ nmap <leader>tb :Telescope buffers<CR>
 nmap <leader>yt :Yazi<CR>
 nmap <leader>yc :Yazi cwd<CR>
 
+
 nmap <F12> :ToggleTerm<CR>
 tnoremap <F12> <C-\><C-N>:ToggleTerm<CR>
 tnoremap <C-`> <C-\><C-N>
-tnoremap <A-l> <C-\><C-N>:BufferLineCycleNext<CR>
-tnoremap <A-h> <C-\><C-N>:BufferLineCyclePrev<CR>
+tnoremap <C-[> <C-\><C-N>
+tnoremap <C-W> <C-\><C-N><C-W>
+tnoremap <A-L> <C-\><C-N>:BufferLineCycleNext<CR>
+tnoremap <A-H> <C-\><C-N>:BufferLineCyclePrev<CR>
 
 filetype plugin indent on
