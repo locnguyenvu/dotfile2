@@ -17,7 +17,6 @@ with builtins;
   home.packages = [
     pkgs._7zz
     pkgs.ast-grep
-    pkgs.delta
     pkgs.duckdb
     pkgs.eza
     pkgs.fd
@@ -29,6 +28,7 @@ with builtins;
     pkgs.nerd-fonts.fira-code
     pkgs.nerd-fonts.jetbrains-mono
     pkgs.nerd-fonts.daddy-time-mono
+    pkgs.iosevka
     pkgs.cascadia-code
     pkgs.procs
     pkgs.process-compose
@@ -164,6 +164,12 @@ with builtins;
           set -g @dracula-show-fahrenheit false
         '';
       }
+      {
+        plugin = tmuxPlugins.tmux-floax;
+        extraConfig = ''
+          set -g @floax-bind 'f'
+        '';
+      }
     ];
   };
   programs.starship = {
@@ -241,13 +247,6 @@ with builtins;
   programs.jujutsu = {
     enable = true;
   };
-  programs.zellij = {
-    enable = true;
-    enableZshIntegration = false;
-    settings = {
-      default_layout = "compact";
-    };
-  };
   programs.atuin = {
     enable = true;
     enableZshIntegration = true;
@@ -259,8 +258,5 @@ with builtins;
       inline_height = 10;
       ctrl_n_shortcuts = true;
     };
-  };
-  services.skhd = {
-    enable = true;
   };
 }
