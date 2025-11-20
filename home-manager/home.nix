@@ -146,6 +146,7 @@ with builtins;
       tmuxPlugins.tmux-fzf
       tmuxPlugins.open
       tmuxPlugins.better-mouse-mode
+      tmuxPlugins.tmux-thumbs
       {
         plugin = tmuxPlugins.resurrect;
         extraConfig = "set -g @resurrect-strategy-nvim 'session'";
@@ -168,6 +169,7 @@ with builtins;
         plugin = tmuxPlugins.tmux-floax;
         extraConfig = ''
           set -g @floax-bind 'f'
+          set -g @floax-text-color 'white'
         '';
       }
     ];
