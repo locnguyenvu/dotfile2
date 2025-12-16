@@ -133,6 +133,10 @@ require('toggleterm').setup({
 })
 -- }}}
 
+-- Amp {{{
+require('amp').setup({ auto_start = true, log_level = "info" })
+-- }}}
+
 -- Nvim LSP config
 ---- navbuddy {{{
 local navbuddy = require('nvim-navbuddy')

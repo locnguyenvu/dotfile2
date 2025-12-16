@@ -57,3 +57,5 @@ tnoremap <A-L> <C-\><C-N>:BufferLineCycleNext<CR>
 tnoremap <A-H> <C-\><C-N>:BufferLineCyclePrev<CR>
 
 filetype plugin indent on
+
+autocmd FileType sql,mysql,plsql lua require('cmp').setup.buffer({ sources = {{ name = 'vim-dadbod-completion' }} })

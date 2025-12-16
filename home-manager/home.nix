@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 let
   exVimPlugin = { user, repo, rev ? "main" }: pkgs.vimUtils.buildVimPlugin {
     pname = "${repo}";
@@ -23,7 +23,6 @@ with builtins;
     pkgs.fx
     pkgs.httpie
     pkgs.hurl
-    pkgs.mitmproxy
     pkgs.nerd-fonts.inconsolata
     pkgs.nerd-fonts.fira-code
     pkgs.nerd-fonts.jetbrains-mono
@@ -159,10 +158,16 @@ with builtins;
         '';
       }
       {
-        plugin = tmuxPlugins.dracula;
+        plugin = tmuxPlugins.catppuccin;
         extraConfig = ''
-          set -g @dracula-show-left-icon session
-          set -g @dracula-show-fahrenheit false
+          set -g @catppuccin_flavor 'macchiato'
+          set -g @catppuccin_window_status_style "rounded"
+          set -g status-left ""
+          set -g @catppuccin_window_text " #W"
+          set -g @catppuccin_window_current_text " #W"
+          set -g @catppuccin_pane_default_text "##{b:pane_current_command}"
+          set -g @catppuccin_window_flags "icon"
+          set -g status-right "#{E:@catppuccin_status_directory}#{E:@catppuccin_status_session}"
         '';
       }
       {
@@ -193,6 +198,7 @@ with builtins;
         "--unset" "GEM_HOME"
     ];
     plugins = with pkgs.vimPlugins; [
+      amp-nvim
       bufferline-nvim
       cmp-nvim-lsp
       cmp-nvim-lua
@@ -216,6 +222,8 @@ with builtins;
       tender-vim
       toggleterm-nvim
       vim-commentary
+      vim-dadbod-ui
+      vim-dadbod-completion
       vim-fugitive
       vim-repeat
       kitty-scrollback-nvim
