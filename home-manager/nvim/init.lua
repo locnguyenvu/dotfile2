@@ -473,3 +473,8 @@ function Lzof.setup(opts)
 end
 Lzof.setup({keymaps = true})
 -- }}}
+
+
+local file_info_extract = dofile(vim.fn.expand('~/.dotfile/nvim/file_info_extract.lua'))
+vim.keymap.set('x', '<leader>cp', file_info_extract.copy_range)
+vim.keymap.set("x", "<leader>cP", file_info_extract.copy_range_with_text)

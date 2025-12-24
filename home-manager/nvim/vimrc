@@ -7,7 +7,6 @@ set clipboard+=unnamedplus
 
 let mapleader= " "
 let g:do_filetype_lua = 1
-
 nnoremap <SPACE> <Nop>
 
 
@@ -19,6 +18,8 @@ nmap <leader>l :BufferLineCycleNext<CR>
 nmap <leader>L :BufferLineMoveNext<CR>
 nmap <leader>h :BufferLineCyclePrev<CR>
 nmap <leader>H :BufferLineMovePrev<CR>
+nmap <leader>j :tabprevious<CR>
+nmap <leader>k :tabnext<CR>
 nmap <leader>e :BufferLinePick<CR>
 nmap <leader>d :BufferLinePickClose<CR>
 nmap <leader>bo :BufferLineCloseOthers<CR>
