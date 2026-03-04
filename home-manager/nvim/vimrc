@@ -1,4 +1,4 @@
-colorscheme tender
+colorscheme catppuccin-frappe
 set termguicolors
 set nu rnu
 set expandtab autoindent smartindent

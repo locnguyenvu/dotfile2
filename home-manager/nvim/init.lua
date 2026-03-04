@@ -1,5 +1,16 @@
 -- vim: ts=2 sw=2 autoindent expandtab foldmethod=marker
 
+-- Theme cappuccin {{{{{
+require("catppuccin").setup({
+  flavour = "frappe", -- latte, frappe, macchiato, mocha
+  background = { -- :h background
+    light = "latte",
+    dark = "frappe",
+  },
+  term_colors = true,
+})
+-- }}}}}}
+
 -- lualine {{{
 require('lualine').setup {
   sections = {
@@ -79,14 +90,16 @@ require("nvim-tree").setup {
 -- }}}
 
 -- Treesitter {{{
-require'nvim-treesitter.configs'.setup {
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting = false,
-  },
-  incremental_selection = { enable = true },
-  textobjects = { enable = true },
-}
+-- Highlight
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { '<filetype>' },
+  callback = function() vim.treesitter.start() end,
+})
+-- Folds
+-- vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+-- vim.wo[0][0].foldmethod = 'expr'
+-- Indention
+-- vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 -- }}}
 
 -- Telescope {{{
@@ -476,5 +489,6 @@ Lzof.setup({keymaps = true})
 
 
 local file_info_extract = dofile(vim.fn.expand('~/.dotfile/nvim/file_info_extract.lua'))
-vim.keymap.set('x', '<leader>cp', file_info_extract.copy_range)
-vim.keymap.set("x", "<leader>cP", file_info_extract.copy_range_with_text)
+vim.keymap.set('n', '<leader>cp', function() file_info_extract.get_relative_path() end)
+vim.keymap.set('x', '<leader>cp', function() file_info_extract.copy_range() end)
+vim.keymap.set("x", "<leader>cP", function() file_info_extract.copy_range_with_text() end)

@@ -63,6 +63,7 @@ with builtins;
       gcof = ''git checkout $(git branch --list | rg -v $(git branch --show-current) | sk)'';
       pc = "process-compose";
       kb = "kubectl";
+      jjl = "jj log --no-pager --limit 10";
     };
     history = {
       size = 10000;
@@ -147,6 +148,12 @@ with builtins;
       tmuxPlugins.better-mouse-mode
       tmuxPlugins.tmux-thumbs
       {
+        plugin = tmuxPlugins.jump;
+        extraConfig = ''
+          set -g @jump-key 's'
+        '';
+      }
+      {
         plugin = tmuxPlugins.resurrect;
         extraConfig = "set -g @resurrect-strategy-nvim 'session'";
       }
@@ -160,7 +167,7 @@ with builtins;
       {
         plugin = tmuxPlugins.catppuccin;
         extraConfig = ''
-          set -g @catppuccin_flavor 'macchiato'
+          set -g @catppuccin_flavor 'frappe'
           set -g @catppuccin_window_status_style "rounded"
           set -g status-left ""
           set -g @catppuccin_window_text " #W"
@@ -174,6 +181,7 @@ with builtins;
         plugin = tmuxPlugins.tmux-floax;
         extraConfig = ''
           set -g @floax-bind 'f'
+          set -g @floax-bind-menu 'g'
           set -g @floax-text-color 'white'
         '';
       }
@@ -182,6 +190,11 @@ with builtins;
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
+    settings = {
+      aws = {
+        disabled = true;
+      };
+    };
   };
   programs.bat = {
     enable = true;
@@ -193,6 +206,7 @@ with builtins;
     withNodeJs = true;
     extraConfig = builtins.readFile nvim/vimrc;
     extraLuaConfig = builtins.readFile nvim/init.lua;
+    initLua = builtins.readFile nvim/init.lua;
     extraWrapperArgs = [
         "--set" "BUNDLE_DISABLE_SHARED_GEMS" "true"
         "--unset" "GEM_HOME"
@@ -203,12 +217,10 @@ with builtins;
       cmp-nvim-lsp
       cmp-nvim-lua
       flash-nvim
-      gruvbox
       hologram-nvim
       indent-blankline-nvim
       lspsaga-nvim
       lualine-nvim
-      go-nvim
       nvim-dap
       nvim-dap-ui
       nvim-cmp
@@ -216,11 +228,12 @@ with builtins;
       nvim-navbuddy
       nvim-lspconfig
       nvim-tree-lua
+      nvim-treesitter
       nvim-treesitter.withAllGrammars
       nvim-web-devicons
       telescope-nvim
-      tender-vim
       toggleterm-nvim
+      catppuccin-nvim
       vim-commentary
       vim-dadbod-ui
       vim-dadbod-completion
@@ -239,7 +252,7 @@ with builtins;
     enableGitIntegration = true;
     enableJujutsuIntegration = true;
     options = {
-      features = "decorations side-by-side line-number";
+      features = "decorations line-number";
     };
   };
   programs.git = {

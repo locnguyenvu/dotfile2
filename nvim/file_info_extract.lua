@@ -36,8 +36,8 @@ function M.copy_view_context(opts)
   if vim.env.TMUX and vim.fn.executable("tmux") == 1 then
     pcall(vim.fn.system, { "tmux", "load-buffer", "-" }, text)
   end
-
-  vim.notify("Copied: " .. header)
+  -- Exit visual mode if called from visual mode
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
 end
 
 function M.copy_range()
@@ -46,6 +46,24 @@ end
 
 function M.copy_range_with_text()
   return M.copy_view_context({ include_text = true })
+end
+
+function M.get_relative_path()
+  local buf = 0
+  local file = vim.api.nvim_buf_get_name(buf)
+  if file == "" then file = "[No Name]" end
+  local path = vim.fn.fnamemodify(file, ":.")
+  
+  -- System clipboard (if available)
+  pcall(vim.fn.setreg, "+", path)
+  vim.fn.setreg('"', path)
+  
+  -- tmux buffer (so you can paste via tmux even without system clipboard)
+  if vim.env.TMUX and vim.fn.executable("tmux") == 1 then
+    pcall(vim.fn.system, { "tmux", "load-buffer", "-" }, path)
+  end
+  
+  return path
 end
 
 return M
