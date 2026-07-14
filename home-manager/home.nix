@@ -117,9 +117,7 @@ with builtins;
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
-    tmux = {
-      enableShellIntegration = true;
-    };
+    historyWidget.command = "";
   };
   programs.tmux = {
     baseIndex = 1;
@@ -142,7 +140,13 @@ with builtins;
       bind-key c new-window -c "#{pane_current_path}"
       bind | split-window -h -c "#{pane_current_path}"
       bind - split-window -v -c "#{pane_current_path}"
+
+      bind o if-shell -F '#{window_zoomed_flag}' 'select-pane; resize-pane -Z' 'select-pane'
+      bind \; if-shell -F '#{window_zoomed_flag}' 'select-pane -l; resize-pane -Z' 'select-pane -l'
+
       set -g default-command $SHELL
+      set -g extended-keys on
+      set -g extended-keys-format csi-u
       '';
     plugins = with pkgs; [
       tmuxPlugins.cpu
@@ -197,14 +201,12 @@ with builtins;
     withPython3 = true;
     withNodeJs = true;
     extraConfig = builtins.readFile nvim/vimrc;
-    extraLuaConfig = builtins.readFile nvim/init.lua;
     initLua = builtins.readFile nvim/init.lua;
     extraWrapperArgs = [
         "--set" "BUNDLE_DISABLE_SHARED_GEMS" "true"
         "--unset" "GEM_HOME"
     ];
     plugins = with pkgs.vimPlugins; [
-      amp-nvim
       bufferline-nvim
       cmp-nvim-lsp
       cmp-nvim-lua

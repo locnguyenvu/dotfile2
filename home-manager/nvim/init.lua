@@ -1,5 +1,12 @@
 -- vim: ts=2 sw=2 autoindent expandtab foldmethod=marker
 
+--- provider {{{
+local is_ssh = vim.env.SSH_CONNECTION ~= nil or vim.env.SSH_CLIENT ~= nil
+if is_ssh then
+  vim.g.clipboard = 'osc52'
+end
+--- }}}
+
 -- Theme cappuccin {{{{{
 require("catppuccin").setup({
   flavour = "frappe", -- latte, frappe, macchiato, mocha
@@ -144,10 +151,6 @@ require('toggleterm').setup({
   start_in_insert = true,
   persist_mode = false
 })
--- }}}
-
--- Amp {{{
-require('amp').setup({ auto_start = true, log_level = "info" })
 -- }}}
 
 -- Nvim LSP config
