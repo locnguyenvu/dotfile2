@@ -16,19 +16,11 @@ with builtins;
 
   home.packages = [
     pkgs._7zz
-    pkgs.ast-grep
-    pkgs.duckdb
     pkgs.eza
     pkgs.fd
     pkgs.fx
     pkgs.httpie
-    pkgs.hurl
-    pkgs.nerd-fonts.inconsolata
-    pkgs.nerd-fonts.fira-code
-    pkgs.nerd-fonts.jetbrains-mono
     pkgs.nerd-fonts.daddy-time-mono
-    pkgs.iosevka
-    pkgs.cascadia-code
     pkgs.procs
     pkgs.process-compose
     pkgs.ripgrep
