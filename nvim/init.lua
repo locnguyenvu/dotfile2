@@ -8,7 +8,11 @@ vim.opt.incsearch = true
 vim.opt.hlsearch = true
 vim.opt.termguicolors = true
 vim.opt.clipboard = "unnamedplus"
-vim.g.clipboard = 'osc52'
+
+local is_ssh = vim.env.SSH_CONNECTION ~= nil or vim.env.SSH_CLIENT ~= nil
+if is_ssh then
+  vim.g.clipboard = 'osc52'
+end
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "sql", "sh", "nix", "vue", "json", "typescript", "typescript.tsx", "lua", "toml" },
