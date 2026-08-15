@@ -1,8 +1,8 @@
 -- Copy current buffer file name + selected line range to clipboard and tmux buffer.
 -- Usage (in init.lua):
---   dofile(vim.fn.expand('~/Download/file_info_extract.lua'))
+--   dofile(vim.fn.expand('~/.config/nvim/lua/file_info_extract.lua'))
 -- or:
---   local mod = dofile(vim.fn.expand('~/Download/file_info_extract.lua'))
+--   local mod = dofile(vim.fn.expand('~/.config/nvim/lua/file_info_extract.lua'))
 --   vim.keymap.set('x', '<leader>cp', mod.copy_range)
 
 local M = {}

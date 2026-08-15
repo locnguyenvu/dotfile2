@@ -1,0 +1,12 @@
+{
+  "plugins": {
+    "nvim-lspconfig": {
+      "rev": "43ed3797b266e1ee8d222e491379ad471c9d3146",
+      "src": "https://github.com/neovim/nvim-lspconfig"
+    },
+    "vim-surround": {
+      "rev": "3d188ed2113431cf8dac77be61b842acb64433d9",
+      "src": "https://github.com/tpope/vim-surround"
+    }
+  }
+}
