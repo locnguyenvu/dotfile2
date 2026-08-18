@@ -1,5 +1,5 @@
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "sql", "sh", "nix", "vue", "json", "typescript", "typescript.tsx", "lua", "toml" },
+  pattern = { "sql", "zsh", "sh", "nix", "vue", "json", "typescript", "typescript.tsx", "lua", "toml" },
   callback = function()
     vim.opt_local.tabstop = 2
     vim.opt_local.shiftwidth = 2
