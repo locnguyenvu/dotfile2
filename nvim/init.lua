@@ -17,4 +17,4 @@ end
 require("config.lazy")
 require("lspconfig")
 require("autocmd")
-
+require("myplugins")
