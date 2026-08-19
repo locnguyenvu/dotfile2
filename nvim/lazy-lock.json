@@ -7,7 +7,7 @@
   "indent-blankline.nvim": { "branch": "master", "commit": "d28a3f70721c79e3c5f6693057ae929f3d9c0a03" },
   "lazy.nvim": { "branch": "main", "commit": "306a05526ada86a7b30af95c5cc81ffba93fef97" },
   "lspsaga.nvim": { "branch": "main", "commit": "cf6fc9473bba1d332eda9887855ea29ed9b37701" },
-  "nvim-lspconfig": { "branch": "master", "commit": "6fc041976833841cc9d991f45193533fe2a2e09b" },
+  "nvim-lspconfig": { "branch": "master", "commit": "0662886bc0a4e0c199dec65cee23a4319dd79f55" },
   "nvim-treesitter": { "branch": "main", "commit": "074aa4422bf029908338e855d0c0f71470a971bb" },
   "nvim-web-devicons": { "branch": "master", "commit": "2ae6958df7ced50baac5035cec0c15799eedfbf7" },
   "plenary.nvim": { "branch": "master", "commit": "74b06c6c75e4eeb3108ec01852001636d85a932b" },
