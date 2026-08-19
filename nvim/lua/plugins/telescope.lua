@@ -9,7 +9,12 @@ return {
     {
       '<leader>tf',
       mode={'n'},
-      function() require('telescope.builtin').find_files() end
+      function()
+        require('telescope.builtin').find_files({
+          layout_strategy='vertical',
+          layout_config={width=0.9}
+        })
+      end
     },
     {
       '<leader>tc',
