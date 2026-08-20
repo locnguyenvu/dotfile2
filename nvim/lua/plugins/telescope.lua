@@ -5,6 +5,12 @@ return {
     'nvim-lua/plenary.nvim',
     { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
   },
+  opts = {
+    defaults = {
+      layout_strategy = 'vertical',
+      layout_config = {width=0.9, height=0.95}
+    }
+  },
   keys = {
     {
       '<leader>tf',

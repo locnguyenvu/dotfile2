@@ -1,5 +1,12 @@
 local M = {}
 
+local function all(tabl)
+  for _, v in ipairs(tabl) do
+    if not v then return false end
+  end
+  return true
+end
+
 local function get_selected_content(exitVisualMode)
   local a = vim.fn.getpos('v')
   local b = vim.fn.getpos('.')
@@ -42,13 +49,20 @@ function M.open_file_path()
 
   local windows = vim.fn.getwininfo()
   for i = 1, #windows do
-    if not string.match(vim.fn.bufname(vim.fn.winbufnr(windows[i].winid)), '#toggleterm#') then
-      vim.api.nvim_win_set_buf(windows[i].winid, buf)
+    if all({
+      not string.match(vim.fn.bufname(vim.fn.winbufnr(windows[i].winid)), '#toggleterm#'),
+      not (windows[i].variables and windows[i].variables['fugitive_status'])
+    }) then
       vim.fn.win_gotoid(windows[i].winid)
+      vim.api.nvim_win_set_buf(windows[i].winid, buf)
       break
     end
   end
 end
 
+
 vim.keymap.set({'v', 'n'}, '<leader>pc', function() M.copy_file_path() end)
 vim.keymap.set({'v'}, 'gf', function() M.open_file_path() end)
+vim.keymap.set({'v'}, '<leader>tf', function()
+  require('telescope.builtin').find_files({find_command={'fd', '-p', '--type', 'f', get_selected_content()}})
+end)
