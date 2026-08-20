@@ -39,9 +39,10 @@ function M.open_file_path()
   local buf = vim.fn.bufadd(text)
   vim.fn.bufload(buf)
   vim.bo[buf].buflisted = true
+
   local windows = vim.fn.getwininfo()
   for i = 1, #windows do
-    if windows[i].terminal == 0 then
+    if not string.match(vim.fn.bufname(vim.fn.winbufnr(windows[i].winid)), '#toggleterm#') then
       vim.api.nvim_win_set_buf(windows[i].winid, buf)
       vim.fn.win_gotoid(windows[i].winid)
       break
