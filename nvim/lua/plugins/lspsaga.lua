@@ -21,5 +21,7 @@ return {
     { '<leader>gt', '<cmd>Lspsaga peek_type_definition<cr>' },
     { '<leader>gT', '<cmd>Lspsaga goto_type_definition<cr>' },
     { '<leader>gf', '<cmd>Lspsaga finder<cr>' },
+    { 'g]', '<cmd>Lspsaga diagnostic_jump_next<cr>' },
+    { 'g[', '<cmd>Lspsaga diagnostic_jump_prev<cr>' },
   }
 }
