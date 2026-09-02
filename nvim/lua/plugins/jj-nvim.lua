@@ -1,0 +1,1 @@
+return { "NicolasGB/jj.nvim" }
