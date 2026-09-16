@@ -1,0 +1,180 @@
+#!/usr/bin/env -S uv run --script
+# vim:ts=4:sw=4:syntax=python
+import argparse
+import json
+import subprocess
+import sys
+import time
+import typing as t
+from pathlib import Path
+
+import tomllib
+
+
+def _term_info(key: str | None = None):
+    kitty_ls_cmd = subprocess.run(['kitty', '@', 'ls'], capture_output=True, text=True, check=True)
+    json_output = json.loads(kitty_ls_cmd.stdout)
+    term_info = json_output.pop(0)
+    if key and key in term_info:
+        return term_info[key]
+    return term_info
+
+def _zmx_session_info(host: str | None = None, session_prefix: str | None = None):
+    try:
+        zmx_ls_command = subprocess.run(
+            [*(['ssh', host] if host else []), 'zmx', 'l'],
+            capture_output=True, text=True, check=True, timeout=30
+        )
+    except subprocess.CalledProcessError as e:
+        print(str(e))
+        return []
+    else:
+        sessions = []
+        for lines in (l.strip() for l in zmx_ls_command.stdout.split("\n")):
+            if not lines:
+                continue
+            properties = []
+            for labels in lines.split("\t"):
+                k, *v = labels.split("=")
+                if not k:
+                    continue
+                properties.append((k, '='.join(v)))
+            sessions.append(dict(properties))
+
+        if session_prefix:
+            return [s for s in sessions if session_prefix in s['name']]
+
+        return sessions
+
+
+def test_ssh_connection(hostname):
+    try:
+        result = subprocess.run(['ssh', '-o', 'ConnectTimeout=5', '-o', 'BatchMode=yes', hostname, 'exit'], check=True, capture_output=True)
+        return result.returncode == 0
+    except subprocess.SubprocessError:
+        return False
+
+
+def launch_kitty_ssh_tab(
+    hostname:str,
+    tab_title: str,
+    windows: list[dict[str, t.Any]] | None = None,
+    *,
+    variables: dict[str, t.Any] | None = None,
+    working_dir: str | None = None,
+    no_response: bool = False,
+    take_forcus: bool = False
+):
+    def _enter_zmx_session(window_title, cmd: str = ''):
+        subprocess.run([
+            'kitty', '@', 'send-text',
+            '--match', f"var:window={tab_title}.{window_title}",
+            f'zmx a {window_title} {cmd}\r'
+        ], check=True)
+
+    if windows is None:
+        windows = []
+
+    # launch options
+    launch_options = ['--var', f"host={hostname}"]
+    for key, value in (variables or {}).items():
+        launch_options.extend(['--var', f"{key}={value}"])
+    if no_response:
+        launch_options.append('--no-response')
+    if not take_forcus:
+        launch_options.append('--dont-take-focus')
+
+    # ssh launch command
+    ssh_cmd_prompt = [ 'kitten', 'ssh' ]
+    if working_dir:
+        ssh_cmd_prompt.extend(['--kitten', f"cwd={working_dir}"])
+    ssh_cmd_prompt.extend(['--kitten', f"env=ZMX_SESSION_PREFIX={tab_title}."])
+
+    # check if there is existing tab with given name
+    exsited_tab = None
+    existed_windows = []
+    for tab in _term_info('tabs'):
+        if tab['title'] == tab_title:
+            exsited_tab = tab
+            existed_windows.extend([w['title'] for w in tab['windows']])
+
+    if not exsited_tab:
+        for i in range(len(windows)):
+            window_title = windows[i].get('title')
+            options = [
+                f"--type={'tab' if i == 0 else 'window'}",
+                f"--title={window_title}",
+                "--var", f"window={tab_title}.{window_title}",
+                (
+                    f"--match=title:{tab_title}" if i > 0 else
+                    f"--tab-title={tab_title}"
+                ),
+            ]
+
+            launch_cmd = [ 'kitty', '@', 'launch', *options, *ssh_cmd_prompt, hostname ]
+
+            subprocess.run(launch_cmd, capture_output=True, text=True, check=True)
+    else:
+        for window in windows:
+            window_title = window.get('title')
+
+            if window_title in existed_windows:
+                continue
+
+            options = [
+                "--type=window",
+                "-m", f"title:{tab_title}",
+                f"--title={window_title}",
+                "--var", f"window={tab_title}.{window_title}",
+            ]
+            launch_cmd = [ 'kitty', '@', 'launch', *options, *ssh_cmd_prompt, hostname ]
+            subprocess.run(launch_cmd, capture_output=True, text=True, check=True)
+            time.sleep(1)
+
+
+    zmx_sessions = {
+        session['name']: session
+        for session in _zmx_session_info(hostname, session_prefix=f"{tab_title}.")
+    }
+    for window in windows:
+        window_title = window.get('title')
+        window_cmd = ''
+
+        session = zmx_sessions.get(f"{tab_title}.{window_title}")
+        if ( not session or ('ended' in session or 'exit_code' in session) ):
+            window_cmd = window.get('cmd', '')
+
+        if session and int(session.get('clients', 0)):
+            continue
+        _enter_zmx_session(window_title, window_cmd)
+
+
+parser = argparse.ArgumentParser(
+    prog="kizm", 
+    description="Kitty + ZMX = Awesome"
+)
+parser.add_argument("config_file")
+
+if __name__ == '__main__':
+    try:
+        args = parser.parse_args()
+        config_file = Path(args.config_file)
+        with open(config_file, 'rb') as fp:
+            config_data = tomllib.load(fp)
+
+        for hostname in config_data['hosts']:
+            print(f"Connecting to {hostname}")
+            if not test_ssh_connection(hostname):
+                continue
+            tab_title = f"{hostname}:{config_data.get('title')}"
+            launch_kitty_ssh_tab(
+                hostname,
+                tab_title,
+                config_data.get('windows', []),
+                working_dir=config_data.get('working_dir', None),
+            )
+            break
+
+    except (FileNotFoundError, tomllib.TOMLDecodeError):
+        print("Invalid file", file=sys.stderr)
+        sys.exit(1)
