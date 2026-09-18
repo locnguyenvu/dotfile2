@@ -8,6 +8,8 @@ vim.opt.incsearch = true
 vim.opt.hlsearch = true
 vim.opt.termguicolors = true
 vim.opt.clipboard = "unnamedplus"
+vim.opt.splitright = true
+vim.opt.splitbelow = true
 
 local is_ssh = vim.env.SSH_CONNECTION ~= nil or vim.env.SSH_CLIENT ~= nil
 if is_ssh then
